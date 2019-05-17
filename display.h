@@ -12,8 +12,6 @@ public:
   Display(const int width, const int height, const std::string& title);
   void update();
   bool isClosed();
-  void clear(float r, float g, float b, float a);
-  void clear();
 
   virtual ~Display();
 protected:

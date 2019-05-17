@@ -14,8 +14,8 @@ main.o: main.cpp
 display.o: display.cpp
 	gcc -c display.cpp -o display.o
 
-shader.o: shader.cpp
-	gcc -c shader.cpp -o shader.o
+shader.o: ./shaders/shaderUtils.cpp
+	gcc -c ./shaders/shaderUtils.cpp -o shader.o
 
 clear:
 	rm -f $(OBJECT_FILES) main

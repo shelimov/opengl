@@ -50,15 +50,6 @@ void Display::update() {
   }
 }
 
-void Display::clear(const float r, const float g, const float b, const float a) {
-  glClearColor(r, g, b, a);
-  glClear(GL_COLOR_BUFFER_BIT);
-}
-
-void Display::clear() {
-  clear(255.0f, 255.0f, 255.0f, 100.0f);
-}
-
 bool Display::isClosed() {
   return m_isClosed;
 }
