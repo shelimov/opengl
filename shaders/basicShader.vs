@@ -1,7 +1,6 @@
-#version 120
+#version 450 core
 
-attribute vec3 position;
-
-void main() {
-  gl_Position = vec4(position, 1.0);
+void main(void)
+{
+    gl_Position = vec4(0.0, 0.0, 0.5, 1.0);
 }

@@ -7,7 +7,7 @@
 
 std::clock_t prevTime = 0;
 const double CLOCKS_PER_MS = CLOCKS_PER_SEC / 1000.0;
-const float FPS = 60.0;
+const float FPS = 120.0;
 const float msPerFrame = 1000.0 / FPS;
 
 void init() {
@@ -15,9 +15,12 @@ void init() {
 }
 
 void gameLoop(Display& d, float timePassed) {
-  std::cout << timePassed << std::endl;
-  std::cout.flush();
-  glClearColor(sin(timePassed), cos(timePassed), 1 - sin(timePassed), 1.0f);
+  const GLfloat color[] = { (float)sin(timePassed) * 0.5f + 0.5f,
+                            (float)cos(timePassed) * 0.5f + 0.5f,
+                            0.0f,
+                            1.0f
+                          };
+  glClearColor(color[0], color[1], color[2], color[3]);
   glClear(GL_COLOR_BUFFER_BIT);
 }
 

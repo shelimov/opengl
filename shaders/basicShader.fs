@@ -1,5 +1,8 @@
-#version 120
+#version 450 core
 
-void main() {
-  gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+out vec4 color;
+
+void main(void)
+{
+    color = vec4(0.0, 0.8, 1.0, 1.0);
 }
