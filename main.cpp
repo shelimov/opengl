@@ -3,7 +3,7 @@
 const float FPS = 120.0;
 const float msPerFrame = 1000.0 / FPS;
 double prevTime = 0.0;
-GLuint vao;
+GLuint vao[1];
 GLuint program;
 
 void init() {
@@ -28,8 +28,8 @@ void init() {
   glLinkProgram(program);
   glDeleteShader(vert);
   glDeleteShader(frag);
-  // glCreateVertexArrays(1, &vao);
-  // glBindVertexArray(vao);
+  glGenVertexArrays(1, vao);
+  glBindVertexArray(vao[0]);
 }
 
 void gameLoop(double secondsPassed) {
@@ -40,8 +40,8 @@ void gameLoop(double secondsPassed) {
     1.0f
   };
   glClearBufferfv(GL_COLOR, 0, color);
-  // glUseProgram(program);
-  // glDrawArrays(GL_POINTS, 0, 1);
+  glUseProgram(program);
+  glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 int main(int argc, char *argv[]) {
