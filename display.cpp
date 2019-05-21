@@ -1,55 +1,48 @@
 #include "display.h"
 
 Display::Display(const int width, const int height, const std::string& title) {
-  SDL_Init(SDL_INIT_EVERYTHING);
+  if (!glfwInit()) {
+    std::cerr << "GLFW failed to initialize!" << std::endl;
+  }
 
-  SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-  SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+  glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-  m_window = SDL_CreateWindow(
-    title.c_str(),
-    SDL_WINDOWPOS_CENTERED,
-    SDL_WINDOWPOS_CENTERED,
-    width,
-    height,
-    SDL_WINDOW_OPENGL
-  );
+  GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+  const GLFWvidmode *mode = glfwGetVideoMode(primaryMonitor);
+  m_window = glfwCreateWindow(mode->width, mode->height, title.c_str(), glfwGetPrimaryMonitor(), NULL);
 
-  m_glContext = SDL_GL_CreateContext(
-    m_window
-  );
+  if (!m_window) {
+    glfwTerminate();
+    std::cerr << "GLFW failed to create window!" << std::endl;
+  }
 
-  m_isClosed = false;
+  glfwMakeContextCurrent(m_window);
 
   GLenum status = glewInit();
 
   if (status != GLEW_OK) {
     std::cerr << "Glew failed to initialize!" << std::endl;
   }
+
+  std::cout << "Version of OpenGL initialized: " << glGetString(GL_VERSION)
+    << '\n' << "Version of OpenGL Shading Language " << glGetString(GL_SHADING_LANGUAGE_VERSION)
+    << std::endl;
 }
 
 Display::~Display() {
-  SDL_GL_DeleteContext(m_glContext);
-  SDL_DestroyWindow(m_window);
-  SDL_Quit();
+  glfwDestroyWindow(m_window);
+  glfwTerminate();
+}
+
+bool Display::shouldClose() {
+  return glfwWindowShouldClose(m_window);
 }
 
 void Display::update() {
-  SDL_GL_SwapWindow(m_window);
-
-  SDL_Event event;
-
-  while (SDL_PollEvent(&event)) {
-    if (event.type == SDL_QUIT) {
-      m_isClosed = true;
-    }
-  }
-}
-
-bool Display::isClosed() {
-  return m_isClosed;
+  glfwSwapBuffers(m_window);
+  glfwPollEvents();
 }

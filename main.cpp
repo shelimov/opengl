@@ -1,40 +1,60 @@
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
-#include <cmath>
-#include "display.h"
-#include "./shaders/shaderUtils.h"
+#include "main.h"
 
-std::clock_t prevTime = 0;
-const double CLOCKS_PER_MS = CLOCKS_PER_SEC / 1000.0;
 const float FPS = 120.0;
 const float msPerFrame = 1000.0 / FPS;
+double prevTime = 0.0;
+GLuint vao;
+GLuint program;
 
 void init() {
+  const std::string vertexShaderCode = loadShader("shaders/basicShader.vs");
+  const std::string fragmentShaderCode = loadShader("shaders/basicShader.fs");
+  GLuint vert = glCreateShader(GL_VERTEX_SHADER);
+  GLuint frag = glCreateShader(GL_FRAGMENT_SHADER);
+  const char* vs_c_str = vertexShaderCode.c_str();
+  const char* fs_c_str = fragmentShaderCode.c_str();
+  glShaderSource(vert, 1, &vs_c_str, NULL);
+  glShaderSource(frag, 1, &fs_c_str, NULL);
+  glCompileShader(vert);
+  std::string buff;
+  checkShaderErrors(vert, GL_COMPILE_STATUS, false, buff);
+  glCompileShader(frag);
+  checkShaderErrors(vert, GL_COMPILE_STATUS, false, buff);
 
+
+  program = glCreateProgram();
+  glAttachShader(program, vert);
+  glAttachShader(program, frag);
+  glLinkProgram(program);
+  glDeleteShader(vert);
+  glDeleteShader(frag);
+  // glCreateVertexArrays(1, &vao);
+  // glBindVertexArray(vao);
 }
 
-void gameLoop(Display& d, float timePassed) {
-  const GLfloat color[] = { (float)sin(timePassed) * 0.5f + 0.5f,
-                            (float)cos(timePassed) * 0.5f + 0.5f,
-                            0.0f,
-                            1.0f
-                          };
-  glClearColor(color[0], color[1], color[2], color[3]);
-  glClear(GL_COLOR_BUFFER_BIT);
+void gameLoop(double secondsPassed) {
+  const GLfloat color[] = {
+    (float)sin(secondsPassed) * 0.5f + 0.5f,
+    (float)cos(secondsPassed) * 0.5f + 0.5f,
+    0.0f,
+    1.0f
+  };
+  glClearBufferfv(GL_COLOR, 0, color);
+  // glUseProgram(program);
+  // glDrawArrays(GL_POINTS, 0, 1);
 }
 
 int main(int argc, char *argv[]) {
   Display display(1024, 768, "OpenGL sandbox");
   init();
 
-  while (!display.isClosed()) {
-    std::clock_t currentTime = clock() / CLOCKS_PER_MS;
-    std::clock_t timeDiff = (currentTime - prevTime);
+  while (!display.shouldClose()) {
+    double currentTime = glfwGetTime() * 1000;
+    double timeDiff = currentTime - prevTime;
     if (timeDiff < msPerFrame) continue;
     prevTime = currentTime;
-    gameLoop(display, currentTime / 1000.0);
 
+    gameLoop(currentTime / 1000);
     display.update();
   }
   return 0;

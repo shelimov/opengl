@@ -1,6 +1,6 @@
 #include "shaderUtils.h"
 
-static std::string loadShader(const std::string& fileName) {
+std::string loadShader(const std::string& fileName) {
   std::ifstream file;
   file.open(fileName.c_str());
 
@@ -21,7 +21,7 @@ static std::string loadShader(const std::string& fileName) {
   return output;
 }
 
-static void checkShaderErrors(GLuint shader, GLuint flag, bool isProgram, const std::string& buff) {
+void checkShaderErrors(GLuint shader, GLuint flag, bool isProgram, const std::string& buff) {
   GLint success = 0;
   GLchar error[1024] = { 0 };
 
