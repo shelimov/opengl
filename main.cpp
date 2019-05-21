@@ -39,6 +39,21 @@ void gameLoop(double secondsPassed) {
     0.0f,
     1.0f
   };
+  const GLfloat attrib[] = {
+    (float)sin(secondsPassed) * 0.5f,
+    (float)cos(secondsPassed) * 0.6f,
+    0.0f,
+    0.0f
+  };
+  const GLfloat colors[] = {
+    (float)sin(secondsPassed) * 0.5f,
+    (float)cos(secondsPassed) * 0.6f,
+    (float)sin(secondsPassed) * 0.5f,
+    1.0f
+  };
+    // Update the value of input attribute 0
+  glVertexAttrib4fv(0, attrib);
+  glVertexAttrib4fv(1, colors);
   glClearBufferfv(GL_COLOR, 0, color);
   glUseProgram(program);
   glDrawArrays(GL_TRIANGLES, 0, 3);
