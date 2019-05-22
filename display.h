@@ -1,6 +1,6 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
-#define CPLUS_INCLUDE_PATH "/usr/local/include/"
+//#define CPLUS_INCLUDE_PATH "/usr/local/include/"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <string>
